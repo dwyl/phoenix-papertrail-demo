@@ -4,6 +4,7 @@ defmodule SpikePapertrail.Todo do
   """
 
   import Ecto.Query, warn: false
+  alias PaperTrail
   alias SpikePapertrail.Repo
 
   alias SpikePapertrail.Todo.Item
@@ -59,7 +60,7 @@ defmodule SpikePapertrail.Todo do
   def create_item(attrs \\ %{}) do
     %Item{}
     |> Item.changeset(attrs)
-    |> Repo.insert()
+    |> PaperTrail.insert()
   end
 
   @doc """
@@ -77,7 +78,7 @@ defmodule SpikePapertrail.Todo do
   def update_item(%Item{} = item, attrs) do
     item
     |> Item.changeset(attrs)
-    |> Repo.update()
+    |> PaperTrail.update()
   end
 
   @doc """
@@ -93,7 +94,7 @@ defmodule SpikePapertrail.Todo do
 
   """
   def delete_item(%Item{} = item) do
-    Repo.delete(item)
+    PaperTrail.delete(item)
   end
 
   @doc """
