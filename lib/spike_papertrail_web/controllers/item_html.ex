@@ -19,7 +19,6 @@ defmodule SpikePapertrailWeb.ItemHTML do
 
   def filter(items, str) do
     case str do
-      "items" -> Enum.filter(items, fn i -> i.status !== 2 end)
       "active" -> Enum.filter(items, fn i -> i.status == 0 end)
       "completed" -> Enum.filter(items, fn i -> i.status == 1 end)
       _ -> Enum.filter(items, fn i -> i.status !== 2 end)
@@ -37,9 +36,5 @@ defmodule SpikePapertrailWeb.ItemHTML do
 
   def got_items?(items) do
     Enum.filter(items, fn i -> i.status < 2 end) |> Enum.count() > 0
-  end
-
-  def convert_to_map(changeset) do
-    Ecto.Changeset.apply_changes(changeset)
   end
 end

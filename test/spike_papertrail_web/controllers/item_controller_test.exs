@@ -4,12 +4,36 @@ defmodule SpikePapertrailWeb.ItemControllerTest do
   import SpikePapertrail.TodoFixtures
 
   @create_attrs %{person_id: 42, status: 0, text: "some text"}
+  @create_completed_attrs %{person_id: 0, status: 1, text: "some text"}
   @update_attrs %{person_id: 43, status: 1, text: "some updated text"}
-  # @invalid_attrs %{person_id: nil, status: nil, text: nil}
+  @invalid_attrs %{person_id: nil, status: nil, text: nil}
 
   describe "index" do
     test "lists all items", %{conn: conn} do
       conn = get(conn, ~p"/items")
+      assert html_response(conn, 200) =~ "todos"
+    end
+
+    test "lists items in filter", %{conn: conn} do
+      conn = post(conn, ~p"/items", item: @create_attrs)
+
+      # After creating item, navigate to 'all' filter page
+      conn = get(conn, ~p"/")
+      assert html_response(conn, 200) =~ @create_attrs.text
+
+      # After creating item, navigate to 'active' filter page
+      conn = get(conn, ~p"/items/active")
+      assert html_response(conn, 200) =~ @create_attrs.text
+
+      # Navigate to 'completed page'
+      conn = get(conn, ~p"/items/completed")
+      assert !(html_response(conn, 200) =~ @create_attrs.text)
+    end
+  end
+
+  describe "new action" do
+    test "renders index", %{conn: conn} do
+      conn = get(conn, ~p"/items/new")
       assert html_response(conn, 200) =~ "todos"
     end
   end
@@ -27,6 +51,11 @@ defmodule SpikePapertrailWeb.ItemControllerTest do
 
       assert %{} = redirected_params(conn)
       assert redirected_to(conn) == ~p"/items/"
+    end
+
+    test "errors when invalid attributes are passed", %{conn: conn} do
+      conn = post(conn, ~p"/items", item: @invalid_attrs)
+      assert html_response(conn, 200) =~ "can&#39;t be blank"
     end
   end
 
@@ -48,6 +77,11 @@ defmodule SpikePapertrailWeb.ItemControllerTest do
 
       conn = get(conn, ~p"/items/")
       assert html_response(conn, 200) =~ "some updated text"
+    end
+
+    test "errors when invalid attributes are passed", %{conn: conn, item: item} do
+      conn = put(conn, ~p"/items/#{item}", item: @invalid_attrs)
+      assert html_response(conn, 200) =~ "can&#39;t be blank"
     end
   end
 
@@ -77,6 +111,22 @@ defmodule SpikePapertrailWeb.ItemControllerTest do
       get(conn, ~p'/items/toggle/#{item.id}')
       toggled_item = SpikePapertrail.Todo.get_item!(item.id)
       assert toggled_item.status == 1
+    end
+  end
+
+  describe "clear completed" do
+
+    test "clears the completed items", %{conn: conn} do
+      # Creating completed item
+      conn = post(conn, ~p"/items", item: @create_completed_attrs)
+      # Clearing completed items
+      conn = get(conn, ~p"/items/clear")
+
+      items = conn.assigns.items
+      [completed_item | _tail] = conn.assigns.items
+
+      assert conn.assigns.filter == "all"
+      assert completed_item.status == 2
     end
   end
 

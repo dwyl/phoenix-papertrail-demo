@@ -35,8 +35,7 @@ defmodule SpikePapertrailWeb.ItemController do
   end
 
   def new(conn, _params) do
-    changeset = Todo.change_item(%Item{})
-    render(conn, :new, changeset: changeset)
+    conn |> redirect(to: ~p"/items/")
   end
 
   def create(conn, %{"item" => item_params}) do
@@ -51,16 +50,10 @@ defmodule SpikePapertrailWeb.ItemController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    item = Todo.get_item!(id)
-    render(conn, :show, item: item)
-  end
-
   def edit(conn, params) do
     index(conn, params)
   end
 
-  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "item" => item_params}) do
     item = Todo.get_item!(id)
 
