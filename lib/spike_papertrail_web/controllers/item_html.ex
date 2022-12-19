@@ -35,8 +35,11 @@ defmodule SpikePapertrailWeb.ItemHTML do
     end
   end
 
-  @spec got_items?(any) :: boolean
   def got_items?(items) do
     Enum.filter(items, fn i -> i.status < 2 end) |> Enum.count() > 0
+  end
+
+  def convert_to_map(changeset) do
+    Ecto.Changeset.apply_changes(changeset)
   end
 end

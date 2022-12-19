@@ -1,6 +1,7 @@
 defmodule SpikePapertrailWeb.ItemController do
   use SpikePapertrailWeb, :controller
 
+  alias SpikePapertrail.Change
   alias SpikePapertrail.Todo
   alias SpikePapertrail.Todo.Item
   import Ecto.Query
@@ -21,7 +22,8 @@ defmodule SpikePapertrailWeb.ItemController do
       items: items,
       changeset: changeset,
       editing: item,
-      filter: Map.get(params, "filter", "all")
+      filter: Map.get(params, "filter", "all"),
+      changes: Change.list_last_20_changes()
     )
   end
 
@@ -35,6 +37,7 @@ defmodule SpikePapertrailWeb.ItemController do
       {:ok, _item} ->
         conn
         |> put_flash(:info, "Item created successfully.")
+        |> assign(:changes, Change.list_last_20_changes())
         |> redirect(to: ~p"/items/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -48,6 +51,7 @@ defmodule SpikePapertrailWeb.ItemController do
   end
 
   def edit(conn, params) do
+    conn = assign(conn, :changes, Change.list_last_20_changes())
     index(conn, params)
   end
 
@@ -57,6 +61,7 @@ defmodule SpikePapertrailWeb.ItemController do
     case Todo.update_item(item, item_params) do
       {:ok, _item} ->
         conn
+        |> assign(:changes, Change.list_last_20_changes())
         |> redirect(to: ~p"/items/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -70,6 +75,7 @@ defmodule SpikePapertrailWeb.ItemController do
 
     conn
     |> put_flash(:info, "Item deleted successfully.")
+    |> assign(:changes, Change.list_last_20_changes())
     |> redirect(to: ~p"/items")
   end
 
