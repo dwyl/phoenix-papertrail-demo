@@ -1,11 +1,11 @@
 import Config
 
 # Configure your database
-config :app, App.Repo,
+config :spike_papertrail, SpikePapertrail.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "app_dev",
+  database: "spike_papertrail_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -16,14 +16,14 @@ config :app, App.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with esbuild to bundle .js and .css sources.
-config :app, AppWeb.Endpoint,
+config :spike_papertrail, SpikePapertrailWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "YwDf4Qggl/zKbAPXDt71j8SuXQU9dTJcByy/4DCJ5yWzlZfzzvUqF8VlhoopDx5c",
+  secret_key_base: "YeDztX566PzIFwLvoWHa5+WnCjCkIHl+L6DBwhaKkeVPung+v/YBCFH3g3pcieRL",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -53,18 +53,18 @@ config :app, AppWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :app, AppWeb.Endpoint,
+config :spike_papertrail, SpikePapertrailWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/app_web/(live|views)/.*(ex)$",
-      ~r"lib/app_web/templates/.*(eex)$"
+      ~r"lib/spike_papertrail_web/(live|views)/.*(ex)$",
+      ~r"lib/spike_papertrail_web/templates/.*(eex)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :app, dev_routes: true
+config :spike_papertrail, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

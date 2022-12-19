@@ -7,18 +7,18 @@
 # General application configuration
 import Config
 
-config :app,
-  ecto_repos: [App.Repo]
+config :spike_papertrail,
+  ecto_repos: [SpikePapertrail.Repo]
 
 # Configures the endpoint
-config :app, AppWeb.Endpoint,
+config :spike_papertrail, SpikePapertrailWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: AppWeb.ErrorHTML, json: AppWeb.ErrorJSON],
+    formats: [html: SpikePapertrailWeb.ErrorHTML, json: SpikePapertrailWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: App.PubSub,
-  live_view: [signing_salt: "4GJwZxxe"]
+  pubsub_server: SpikePapertrail.PubSub,
+  live_view: [signing_salt: "iYJieT2k"]
 
 # Configures the mailer
 #
@@ -27,7 +27,7 @@ config :app, AppWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :app, App.Mailer, adapter: Swoosh.Adapters.Local
+config :spike_papertrail, SpikePapertrail.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,

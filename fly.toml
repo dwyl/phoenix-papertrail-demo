@@ -1,6 +1,6 @@
-# fly.toml file generated for phxtodo on 2022-12-09T15:40:06Z
+# fly.toml file generated for phx_spike_papertrail on 2022-12-09T15:40:06Z
 
-app = "phxtodo"
+app = "phx_spike_papertrail"
 kill_signal = "SIGTERM"
 kill_timeout = 5
 processes = []
@@ -9,7 +9,7 @@ processes = []
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "phxtodo.fly.dev"
+  PHX_HOST = "phx_spike_papertrail.fly.dev"
   PORT = "8080"
 
 [experimental]

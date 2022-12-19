@@ -1,23 +1,15 @@
-defmodule App.MixProject do
+defmodule SpikePapertrail.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :app,
-      version: "1.17.0",
+      app: :spike_papertrail,
+      version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [
-        c: :test,
-        coveralls: :test,
-        "coveralls.json": :test,
-        "coveralls.html": :test,
-        t: :test
-      ]
+      deps: deps()
     ]
   end
 
@@ -26,7 +18,7 @@ defmodule App.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {App.Application, []},
+      mod: {SpikePapertrail.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -73,23 +65,11 @@ defmodule App.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      seeds: ["run priv/repo/seeds.exs"],
-      setup: ["deps.get", "ecto.reset", "seeds", "tailwind.install"],
-      "ecto.setup": [
-        "ecto.create --quiet",
-        "ecto.migrate --quiet",
-        "run priv/repo/seeds.exs"
-      ],
-      "ecto.reset": ["ecto.drop --quiet", "ecto.setup"],
-      "assets.deploy": [
-        "tailwind default --minify",
-        "esbuild default --minify",
-        "phx.digest"
-      ],
-      test: ["ecto.reset", "test"],
-      t: ["test"],
-      c: ["coveralls.html"],
-      s: ["phx.server"]
+      setup: ["deps.get", "ecto.setup"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
     ]
   end
 end
