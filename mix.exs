@@ -9,7 +9,15 @@ defmodule SpikePapertrail.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        c: :test,
+        coveralls: :test,
+        "coveralls.json": :test,
+        "coveralls.html": :test,
+        t: :test
+      ]
     ]
   end
 

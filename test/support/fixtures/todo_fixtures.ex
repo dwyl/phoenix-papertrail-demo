@@ -17,6 +17,6 @@ defmodule SpikePapertrail.TodoFixtures do
       })
       |> SpikePapertrail.Todo.create_item()
 
-    item
+    Map.get(item, :model)
   end
 end
