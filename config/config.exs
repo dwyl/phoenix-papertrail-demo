@@ -10,6 +10,9 @@ import Config
 config :spike_papertrail,
   ecto_repos: [SpikePapertrail.Repo]
 
+config :paper_trail,
+repo: SpikePapertrail.Repo
+
 # Configures the endpoint
 config :spike_papertrail, SpikePapertrailWeb.Endpoint,
   url: [host: "localhost"],

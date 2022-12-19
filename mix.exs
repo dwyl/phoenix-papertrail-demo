@@ -52,6 +52,9 @@ defmodule SpikePapertrail.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
 
+      # Adding `paper_trail`
+      {:paper_trail, "~> 0.14.3"},
+
       # Track test coverage
       {:excoveralls, "~> 0.15", only: [:test, :dev]}
     ]
