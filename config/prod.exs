@@ -11,9 +11,6 @@ import Config
 # before starting your production server.
 config :spike_papertrail, SpikePapertrailWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
-# Configures Swoosh API Client
-config :swoosh, :api_client, SpikePapertrail.Finch
-
 # Do not print debug messages in production
 config :logger, level: :info
 
