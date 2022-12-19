@@ -9,16 +9,16 @@ defmodule SpikePapertrail.Change do
   alias SpikePapertrail.Repo
 
   @doc """
-  Returns the list of changes.
+  Returns the list of changes for a specific item.
 
   ## Examples
 
-      iex> list_changes()
+      iex> list_changes(12)
       [%Change{}, ...]
 
   """
-  def list_last_20_changes do
-    from(record in Change, select: record, limit: 20, order_by: [desc: :inserted_at])
+  def list_last_20_changes(id) do
+    from(record in Change, where: record.item_id == ^id, select: record, limit: 20, order_by: [desc: :inserted_at])
     |> Repo.all()
   end
 end

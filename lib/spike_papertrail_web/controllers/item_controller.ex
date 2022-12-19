@@ -15,6 +15,13 @@ defmodule SpikePapertrailWeb.ItemController do
         %Item{}
       end
 
+    changes = case Map.has_key?(params, "id") do
+      true ->
+        Change.list_last_20_changes(params["id"])
+
+      false -> []
+    end
+
     items = Todo.list_items()
     changeset = Todo.change_item(item)
 
@@ -23,7 +30,7 @@ defmodule SpikePapertrailWeb.ItemController do
       changeset: changeset,
       editing: item,
       filter: Map.get(params, "filter", "all"),
-      changes: Change.list_last_20_changes()
+      changes: changes
     )
   end
 
@@ -37,7 +44,6 @@ defmodule SpikePapertrailWeb.ItemController do
       {:ok, _item} ->
         conn
         |> put_flash(:info, "Item created successfully.")
-        |> assign(:changes, Change.list_last_20_changes())
         |> redirect(to: ~p"/items/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -51,17 +57,16 @@ defmodule SpikePapertrailWeb.ItemController do
   end
 
   def edit(conn, params) do
-    conn = assign(conn, :changes, Change.list_last_20_changes())
     index(conn, params)
   end
 
+  @spec update(Plug.Conn.t(), map) :: Plug.Conn.t()
   def update(conn, %{"id" => id, "item" => item_params}) do
     item = Todo.get_item!(id)
 
     case Todo.update_item(item, item_params) do
       {:ok, _item} ->
         conn
-        |> assign(:changes, Change.list_last_20_changes())
         |> redirect(to: ~p"/items/")
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -75,7 +80,6 @@ defmodule SpikePapertrailWeb.ItemController do
 
     conn
     |> put_flash(:info, "Item deleted successfully.")
-    |> assign(:changes, Change.list_last_20_changes())
     |> redirect(to: ~p"/items")
   end
 

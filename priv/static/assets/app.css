@@ -2174,6 +2174,10 @@ a.new-todo {
     margin-bottom: 0px;
   }
 
+  .md\:ml-2 {
+    margin-left: 0.5rem;
+  }
+
   .md\:h-\[70vh\] {
     height: 70vh;
   }
