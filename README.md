@@ -235,6 +235,81 @@ is created with the specified fields.
 If you don't have this installed, 
 [we *highly recommend you doing so*.](https://github.com/dwyl/learn-postgresql/issues/43#issuecomment-469000357)
 
+## 3. Making `PaperTrail` handle mutations
+
+We are ready to track these changes!
+According to [`PaperTrail documentation`](https://github.com/izelnakri/paper_trail#example),
+only the `insert`, `update` and `delete` methods
+are trackable.
+For this, we just need to make `Repo` operations
+*pass through `PaperTrail`*.
+
+Head on to `lib/app/todo.ex` 
+and do just that!
+Import `PaperTrail`
+and change the `create_item/1`,
+`updated_item/2` 
+and `delete_item/1` functions
+to the following.
+
+```elixir
+defmodule App.Todo do
+  alias PaperTrail
+
+  def create_item(attrs \\ %{}) do
+    %Item{}
+    |> Item.changeset(attrs)
+    |> PaperTrail.insert()
+  end
+
+  def update_item(%Item{} = item, attrs) do
+    item
+    |> Item.changeset(attrs)
+    |> PaperTrail.update()
+  end
+
+  def delete_item(%Item{} = item) do
+    PaperTrail.delete(item)
+  end
+
+end
+```
+
+Instead of calling `Repo.insert()`, for example,
+we are using `PaperTrail.insert()` method,
+which will handle tracking the changes
+for us.
+
+Do notice these operations
+will now return a different object.
+For example, on success, the return will be:
+
+```elixir
+{:ok,
+  %{
+    model: %Item{__meta__: Ecto.Schema.Metadata<:loaded, "items"> ...},
+    version: %PaperTrail.Version{__meta__: Ecto.Schema.Metadata<:loaded, "versions">...}  
+  }
+}
+```
+
+It now returns the `changeset` 
+inside `:model` 
+and the referring `versions` record
+inside `:version`.
+
+If you run `mix phx.server`
+and visit `localhost:4000`,
+the app should work normally.
+
+<img width="1095" alt="with_papertrail" src="https://user-images.githubusercontent.com/17494745/208689155-e3a4deaa-e318-4a34-9219-30072c597a21.png">
+
+However, every time the user 
+creates an item,
+edits an item
+or deletes one,
+this *action is recorded*.
+
 # _Deploy_!
 
 Bonus level: deploy to **Fly.io** 

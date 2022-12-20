@@ -3,6 +3,7 @@ defmodule App.Todo do
   The Todo context.
   """
 
+  alias PaperTrail
   import Ecto.Query, warn: false
   alias App.Repo
 
@@ -59,7 +60,7 @@ defmodule App.Todo do
   def create_item(attrs \\ %{}) do
     %Item{}
     |> Item.changeset(attrs)
-    |> Repo.insert()
+    |> PaperTrail.insert()
   end
 
   @doc """
@@ -77,7 +78,7 @@ defmodule App.Todo do
   def update_item(%Item{} = item, attrs) do
     item
     |> Item.changeset(attrs)
-    |> Repo.update()
+    |> PaperTrail.update()
   end
 
   @doc """
@@ -93,7 +94,7 @@ defmodule App.Todo do
 
   """
   def delete_item(%Item{} = item) do
-    Repo.delete(item)
+    PaperTrail.delete(item)
   end
 
   @doc """
