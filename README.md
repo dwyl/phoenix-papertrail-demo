@@ -34,6 +34,30 @@ we suggest taking a few minutes to get up-to-speed.
 
 ## 1. Borrow Baseline Code
 
+Let's start by cloning the code from
+[dwyl/**phoenix-todo-list-tutorial**].
+We are going to be using a version of the repo
+that does not have authentication nor API.
+This is to simplify the workflow 
+and testing.
+
+Clone the repository from the following link -> 
+https://github.com/dwyl/phoenix-todo-list-tutorial/tree/ab4470d68f64ed8f5596dd09f3322193317b838e
+
+After cloning the code,
+run the following commands to fetch the dependencies
+and to set up databases.
+
+```sh
+mix deps.get
+mix setup
+```
+
+After this, if you run `mix phx.server`,
+you will be able to run the
+
+
+
 
 
 # _Deploy_!

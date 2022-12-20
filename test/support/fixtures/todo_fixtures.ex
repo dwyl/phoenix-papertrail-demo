@@ -1,7 +1,7 @@
-defmodule SpikePapertrail.TodoFixtures do
+defmodule App.TodoFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `SpikePapertrail.Todo` context.
+  entities via the `App.Todo` context.
   """
 
   @doc """
@@ -15,8 +15,8 @@ defmodule SpikePapertrail.TodoFixtures do
         status: 42,
         text: "some text"
       })
-      |> SpikePapertrail.Todo.create_item()
+      |> App.Todo.create_item()
 
-    Map.get(item, :model)
+    item
   end
 end

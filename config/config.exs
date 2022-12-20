@@ -7,21 +7,27 @@
 # General application configuration
 import Config
 
-config :spike_papertrail,
-  ecto_repos: [SpikePapertrail.Repo]
-
-config :paper_trail,
-repo: SpikePapertrail.Repo
+config :app,
+  ecto_repos: [App.Repo]
 
 # Configures the endpoint
-config :spike_papertrail, SpikePapertrailWeb.Endpoint,
+config :app, AppWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: SpikePapertrailWeb.ErrorHTML, json: SpikePapertrailWeb.ErrorJSON],
+    formats: [html: AppWeb.ErrorHTML, json: AppWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: SpikePapertrail.PubSub,
-  live_view: [signing_salt: "iYJieT2k"]
+  pubsub_server: App.PubSub,
+  live_view: [signing_salt: "4GJwZxxe"]
+
+# Configures the mailer
+#
+# By default it uses the "Local" adapter which stores the emails
+# locally. You can see the emails in your browser, at "/dev/mailbox".
+#
+# For production it's recommended to configure a different adapter
+# at the `config/runtime.exs`.
+config :app, App.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,

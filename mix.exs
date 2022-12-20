@@ -1,10 +1,10 @@
-defmodule SpikePapertrail.MixProject do
+defmodule App.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :spike_papertrail,
-      version: "0.1.0",
+      app: :app,
+      version: "1.17.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -26,7 +26,7 @@ defmodule SpikePapertrail.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {SpikePapertrail.Application, []},
+      mod: {App.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -52,15 +52,13 @@ defmodule SpikePapertrail.MixProject do
       {:phoenix_live_dashboard, "~> 0.7.2"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
+      {:swoosh, "~> 1.3"},
       {:finch, "~> 0.13"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-
-      # Adding `paper_trail`
-      {:paper_trail, "~> 0.14.3"},
 
       # Track test coverage
       {:excoveralls, "~> 0.15", only: [:test, :dev]}
@@ -75,11 +73,23 @@ defmodule SpikePapertrail.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"]
+      seeds: ["run priv/repo/seeds.exs"],
+      setup: ["deps.get", "ecto.reset", "seeds", "tailwind.install"],
+      "ecto.setup": [
+        "ecto.create --quiet",
+        "ecto.migrate --quiet",
+        "run priv/repo/seeds.exs"
+      ],
+      "ecto.reset": ["ecto.drop --quiet", "ecto.setup"],
+      "assets.deploy": [
+        "tailwind default --minify",
+        "esbuild default --minify",
+        "phx.digest"
+      ],
+      test: ["ecto.reset", "test"],
+      t: ["test"],
+      c: ["coveralls.html"],
+      s: ["phx.server"]
     ]
   end
 end
