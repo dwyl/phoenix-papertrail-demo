@@ -54,6 +54,14 @@ In here, you can clone the files
 with the same initial version
 we are going to be starting this tutorial.
 
+Just make sure these files 
+look like the following:
+- [`/test/app_web/controllers/item_controller_test.exs`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/test/app_web/controllers/item_controller_test.exs)
+- [`/test/app/todo_test.exs`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/test/app/todo_test.exs)
+- [`/test/app_web/controllers/item_html_test.exs`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/test/app_web/controllers/item_html_test.exs)
+- [`/lib/app_web/router.ex`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/lib/app_web/router.ex)
+- [`/lib/app_web/controllers/item_controller.ex`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/lib/app_web/controllers/item_controller.ex)
+
 
 After cloning the code,
 run the following commands to fetch the dependencies
