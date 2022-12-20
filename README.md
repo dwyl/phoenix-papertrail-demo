@@ -310,6 +310,108 @@ edits an item
 or deletes one,
 this *action is recorded*.
 
+### 3.1 Fixing tests
+
+If you run `mix test`, 
+you will notice we broke quite a few tests. 😅
+
+```sh
+Finished in 0.2 seconds (0.08s async, 0.1s sync)
+32 tests, 14 failures
+
+Randomized with seed 149737
+```
+
+Do not worry, though!
+We can fix it!
+The reason these tests are failing 
+is because of what we said earlier:
+the object returned from the repo
+operation is no longer a `changeset`
+but a **map** with `{model: changeset, version: version_obj}`.
+
+Many of these tests is using the `item_fixture/1`
+function inside `test/support/fixtures/todo_fixtures.ex`.
+If instead of returning the map, 
+we return the `:model` property,
+most of these failing tests should be corrected!
+
+Open the file and change the function to this:
+
+```elixir
+  def item_fixture(attrs \\ %{}) do
+    {:ok, item} =
+      attrs
+      |> Enum.into(%{
+        person_id: 42,
+        status: 42,
+        text: "some text"
+      })
+      |> App.Todo.create_item()
+
+    Map.get(item, :model)
+  end
+```
+
+If we run `mix test`:
+
+```sh
+Finished in 0.2 seconds (0.09s async, 0.1s sync)
+32 tests, 3 failures
+```
+
+We still got three tests to fix!
+Luckily, it's also really simple!
+Open the `test/app/todo_test.exs`
+and change the following tests to.
+
+```elixir
+test "create_item/1 with valid data creates a item" do
+  valid_attrs = %{person_id: 42, status: 42, text: "some text"}
+
+  assert {:ok, ret} = Todo.create_item(valid_attrs)
+  item = ret.model
+  assert item.person_id == 42
+  assert item.status == 42
+  assert item.text == "some text"
+end
+
+test "update_item/2 with valid data updates the item" do
+  item = item_fixture()
+  update_attrs = %{person_id: 43, status: 43, text: "some updated text"}
+
+  assert {:ok, ret} = Todo.update_item(item, update_attrs)
+  item = ret.model
+  assert item.person_id == 43
+  assert item.status == 43
+  assert item.text == "some updated text"
+end    
+  
+test "delete_item/1 deletes the item" do
+  item = item_fixture()
+  assert {:ok, %{model: %Item{}, version: %PaperTrail.Version{}}} = Todo.delete_item(item)
+  assert_raise Ecto.NoResultsError, fn -> Todo.get_item!(item.id) end
+end
+```
+
+We are now checking the changeset
+with `item = ret.model`,
+because the object returned 
+from database operations have changed
+since we are now using `PaperTrail`.
+
+If we run `mix test`:
+
+```sh
+................................
+Finished in 0.3 seconds (0.1s async, 0.2s sync)
+32 tests, 0 failures
+```
+
+Everything is fixed! 
+Hurray! 🎉
+
+
 # _Deploy_!
 
 Bonus level: deploy to **Fly.io** 

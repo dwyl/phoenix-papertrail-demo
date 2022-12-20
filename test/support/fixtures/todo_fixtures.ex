@@ -17,6 +17,6 @@ defmodule App.TodoFixtures do
       })
       |> App.Todo.create_item()
 
-    item
+    Map.get(item, :model)
   end
 end
