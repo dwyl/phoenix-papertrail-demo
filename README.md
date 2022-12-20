@@ -460,12 +460,6 @@ defmodule App.Todo.Change do
     field :meta, :map
     field :inserted_at, :naive_datetime
   end
-
-  @doc false
-  def changeset(item, attrs) do
-    item
-    |> cast(attrs, [:event, :item_type, :item_id, :item_changes, :originator_id, :origin, :meta])
-  end
 end
 ```
 
@@ -657,10 +651,38 @@ your app should now be working!
 ![final](https://user-images.githubusercontent.com/17494745/208715527-78c18229-a1f8-4a88-8763-109e1f972104.gif)
 
 
+### 4.4 Running tests
 
+If we run `MIX_ENV=test mix coveralls.html`, 
+we will observe this output:
 
+```sh
+................................
+Finished in 0.2 seconds (0.08s async, 0.1s sync)
+32 tests, 0 failures
 
+Randomized with seed 852095
+----------------
+COV    FILE                                        LINES RELEVANT   MISSED
+100.0% lib/app/change.ex                              24        1        0
+100.0% lib/app/todo.ex                               112        7        0
+100.0% lib/app/todo/change.ex                         15        1        0
+100.0% lib/app/todo/item.ex                           19        2        0
+100.0% lib/app_web/controllers/error_html.ex          19        1        0
+100.0% lib/app_web/controllers/error_json.ex          15        1        0
+100.0% lib/app_web/controllers/item_controller.      106       34        0
+100.0% lib/app_web/controllers/item_html.ex           40       12        0
+  0.0% lib/app_web/gettext.ex                         24        0        0
+100.0% lib/app_web/router.ex                          27        5        0
+[TOTAL] 100.0%
+```
 
+That's right! No need to add new tests!
+We fixed all of them prior.
+This shows that integrating `PaperTrail` 
+into your project should have minimal impact
+and you can quickly get up-and-running 
+with a few lines of code!
 
 
 # _Deploy_!

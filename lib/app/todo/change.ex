@@ -12,10 +12,4 @@ defmodule App.Todo.Change do
     field :meta, :map
     field :inserted_at, :naive_datetime
   end
-
-  @doc false
-  def changeset(item, attrs) do
-    item
-    |> cast(attrs, [:event, :item_type, :item_id, :item_changes, :originator_id, :origin, :meta])
-  end
 end
