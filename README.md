@@ -684,8 +684,36 @@ into your project should have minimal impact
 and you can quickly get up-and-running 
 with a few lines of code!
 
+## 5. Adding further information on `version` records
 
-# _Deploy_!
+We touched on a basic usage of `PaperTrail`
+in this walk-through.
+However, there are a handful of features
+that might be useful for other use-cases
+to add extra information to each 
+`change` record.
 
-Bonus level: deploy to **Fly.io** 
-so that anyone can try it.
+### 5.1 Version origin references
+
+Amongst the fields in the `versions` schema,
+there is one called `origin`. 
+The user can add a string 
+pertaining to the origin of the mutation.
+
+```elixir
+PaperTrail.update(changeset, origin: "migration")
+```
+
+### 5.2 Adding metadata
+
+Similarly, there is a `meta` field
+in which metadata can be added. 
+
+```elixir
+PaperTrail.update(changeset, meta: %{data: "some data"})
+```
+
+There are more advanced features that can be used
+(e.g. multi-tenancy).
+You can find more about these
+in the [`PaperTrail docs`](https://github.com/izelnakri/paper_trail)
