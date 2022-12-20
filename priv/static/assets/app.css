@@ -882,6 +882,18 @@ select {
   margin-top: 4rem;
 }
 
+.mb-12 {
+  margin-bottom: 3rem;
+}
+
+.mt-12 {
+  margin-top: 3rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .block {
   display: block;
 }
@@ -920,6 +932,12 @@ select {
 
 .h-3 {
   height: 0.75rem;
+}
+
+.h-fit {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .min-h-full {
@@ -962,8 +980,16 @@ select {
   width: 0.75rem;
 }
 
+.w-\[100\%\] {
+  width: 100%;
+}
+
 .max-w-3xl {
   max-width: 48rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-none {
@@ -982,6 +1008,10 @@ select {
 
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.flex-col {
+  flex-direction: column;
 }
 
 .items-center {
@@ -1181,8 +1211,20 @@ select {
   padding-right: 1.5rem;
 }
 
+.pr-1 {
+  padding-right: 0.25rem;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
 .text-left {
   text-align: left;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-right {
@@ -1201,6 +1243,16 @@ select {
 
 .text-\[0\.8125rem\] {
   font-size: 0.8125rem;
+}
+
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
 }
 
 .font-semibold {
@@ -1270,6 +1322,19 @@ select {
 .text-zinc-700 {
   --tw-text-opacity: 1;
   color: rgb(63 63 70 / var(--tw-text-opacity));
+}
+
+.text-\[\#af2f2f26\] {
+  color: #af2f2f26;
+}
+
+.text-\[\#af2f2f9f\] {
+  color: #af2f2f9f;
+}
+
+.text-blue-500 {
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 
 .antialiased {
@@ -1409,8 +1474,6 @@ body {
   line-height: 1.4em;
   background: #f5f5f5;
   color: #4d4d4d;
-  min-width: 230px;
-  max-width: 550px;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -2019,6 +2082,28 @@ a.new-todo {
 
   .sm\:leading-6 {
     line-height: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:mb-0 {
+    margin-bottom: 0px;
+  }
+
+  .md\:ml-2 {
+    margin-left: 0.5rem;
+  }
+
+  .md\:w-\[50\%\] {
+    width: 50%;
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
+  }
+
+  .md\:justify-around {
+    justify-content: space-around;
   }
 }
 

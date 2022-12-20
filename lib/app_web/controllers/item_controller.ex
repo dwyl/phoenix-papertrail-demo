@@ -5,6 +5,7 @@ defmodule AppWeb.ItemController do
   alias App.Todo.Item
   import Ecto.Query
   alias App.Repo
+  alias App.Change
 
   def index(conn, params) do
     item =
@@ -14,6 +15,13 @@ defmodule AppWeb.ItemController do
         %Item{}
       end
 
+    changes = case Map.has_key?(params, "id") do
+      true ->
+        Change.list_last_20_changes(params["id"])
+
+      false -> []
+    end
+
     items = Todo.list_items()
     changeset = Todo.change_item(item)
 
@@ -21,7 +29,8 @@ defmodule AppWeb.ItemController do
       items: items,
       changeset: changeset,
       editing: item,
-      filter: Map.get(params, "filter", "all")
+      filter: Map.get(params, "filter", "all"),
+      changes: changes
     )
   end
 

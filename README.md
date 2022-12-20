@@ -32,6 +32,8 @@ in our `Phoenix` Todo List Tutorial:
 If you haven't been through it,
 we suggest taking a few minutes to get up-to-speed.
 
+You should also be using Phoenix 1.7.
+
 ## 1. Borrow Baseline Code
 
 Let's start by cloning the code from
@@ -418,6 +420,247 @@ Finished in 0.3 seconds (0.1s async, 0.2s sync)
 
 Everything is fixed! 
 Hurray! 🎉
+
+## 4. Showing changes to item in UI
+
+So far, we can check these changes *internally*.
+But it would be great to have the ability
+to see the changes an `item` has been subjected to
+by double-clicking them.
+
+This is the "hardest" part of the tutorial
+but it will be well worth it!
+
+### 4.1 Fetching last `changes` of an `item`
+
+[`PaperTrail` has a way to fetch the 
+`last` and `first`](https://github.com/dwyl/phoenix-papertrail-demo/blob/6116a99190d348c9f87b883ef5525e7921fd034f/lib/app_web/controllers/item_controller.ex) `version` 
+(the name of the change record inside `versions` table)
+but no way of querying multiple or even filtering.
+We will need to do that job ourselves.
+
+For this, we are going to add a `Changes` schema
+that will be then displayed on the UI.
+
+inside `lib/app/todo`, create a file `change.ex`
+and add the following code.
+
+```elixir
+defmodule App.Todo.Change do
+  use Ecto.Schema
+  import Ecto.Changeset
+
+  schema "versions" do
+    field :event,        :string
+    field :item_type,    :string
+    field :item_id,      :integer
+    field :item_changes, :map
+    field :originator_id, :integer
+    field :origin,       :string
+    field :meta, :map
+    field :inserted_at, :naive_datetime
+  end
+
+  @doc false
+  def changeset(item, attrs) do
+    item
+    |> cast(attrs, [:event, :item_type, :item_id, :item_changes, :originator_id, :origin, :meta])
+  end
+end
+```
+
+We just added the same fields that are present
+inside the `versions` table. 
+
+Inside `lib/app`, add a new file `change.ex`.
+Inside this file, 
+we are going to add the function `list_last_20_changes/1`.
+This function will return the last 20 changes
+made on a given `item`.
+
+```elixir
+defmodule App.Change do
+  @moduledoc """
+  The Todo context.
+  """
+
+  import Ecto.Query, only: [from: 2]
+  alias App.Todo.Change
+  alias PaperTrail
+  alias App.Repo
+
+  @doc """
+  Returns the list of changes for a specific item.
+
+  ## Examples
+
+      iex> list_changes(12)
+      [%Change{}, ...]
+
+  """
+  def list_last_20_changes(id) do
+    from(record in Change, where: record.item_id == ^id, select: record, limit: 20, order_by: [desc: :inserted_at])
+    |> Repo.all()
+  end
+end
+```
+
+### 4.2 Adding list of changes to connection assigns
+
+To show an `item`'s changes in the UI,
+we need to make it available inside the view controller.
+Currently, to edit an `item`, we double-click it.
+
+<img width="1095" alt="update" src="https://user-images.githubusercontent.com/17494745/208703895-4c20b3a9-d0a0-48e5-bc4f-91cad2a05221.png">
+
+We can leverage this behaviour 
+to also show the actions next to it.
+When editing a timer, 
+the `index` function is called
+inside `lib/app/controllers/item_controller.ex`.
+Whenever an `id` is in the URL params, 
+it means an item is being edited.
+Therefore, we can add a `changes` array
+to the connection assigns 
+referring to the tracking changes of the `item` 
+that is being edited.
+
+Inside `item_controller.ex`, 
+change the `index/2` function to the following.
+
+```elixir
+  def index(conn, params) do
+    item =
+      if not is_nil(params) and Map.has_key?(params, "id") do
+        Todo.get_item!(params["id"])
+      else
+        %Item{}
+      end
+
+    changes = case Map.has_key?(params, "id") do
+      true ->
+        Change.list_last_20_changes(params["id"])
+
+      false -> []
+    end
+
+    items = Todo.list_items()
+    changeset = Todo.change_item(item)
+
+    render(conn, "index.html",
+      items: items,
+      changeset: changeset,
+      editing: item,
+      filter: Map.get(params, "filter", "all"),
+      changes: changes
+    )
+  end
+```
+
+We are now fetching the `item` changes 
+every time it is being edited!
+
+### 4.3 Changing the UI
+
+Now that we have the changes array
+assigned to the connection assigns,
+we can use them in our UI!
+
+Since we are using Phoenix 1.7rc,
+it has TailwindCSS installed by default.
+So we can use it!
+
+Find the `lib/app_web/controllers/item_html/index.html.heex` 
+file and make the following changes.
+Locate `<section class="todoapp">`
+and change it to:
+
+```html
+<section class="todoapp h-fit w-[100%] mb-12 md:w-[50%] md:mb-0 md:ml-2">
+```
+
+Now wrap all the contents of the file in a `<div>`
+with the following classes.
+
+```html
+<div class='w-full flex flex-col md:flex-row md:justify-around'>
+  <section></section>
+  <!-- adding a section here -->
+</div>
+```
+
+We are creating two flex columns:
+one for the section pertaining to adding/editing/deleting items
+(what we already have)
+and another section to showcase the changes of the item
+(what we are going to build).
+
+Inside the wrapper `div` we have created,
+add a second section, 
+next to the already existing one.
+*This will be the section displaying the changes*.
+
+Add the following code:
+
+```html
+  <section class="max-w-full md:w-[50%]">
+    <header class="header mt-12">
+      <h1 class="text-5xl text-center text-[#af2f2f26]">Actions</h1>
+      <h3 class="text-lg text-center text-[#af2f2f9f]">last 20 actions of chosen item</h3>
+    </header>
+    <div class="mt-12 pr-1 pl-4">
+      <%= for change <- @changes do %>
+      <div class="mb-4">
+        <div>
+          <span class="text-blue-500	"><b>event:</b> <%= change.event %></span>
+          <span class='ml-2 mr-2'>|</span>
+          <span><b>type:</b> <%= change.item_type %></span>
+          <span class='ml-2 mr-2'>|</span>
+          <span><b>item_id:</b> <%= change.item_id %></span>
+        </div>
+        <div>
+          <span class="text-xs"><b>item_changes:</b> <%= inspect(Map.take(change.item_changes, ["inserted_at", "status", "text"]))%></span>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </section>
+```
+
+Here we are iterating over the `@changes` array
+inside the connection assigns
+and displaying the information to the user.
+
+The last change we need to do is to
+remove the `width` constraints of the `body` 
+in the `assets/css/todomvc-app.css` file.
+Locate `body {}` 
+and delete `min-width` and `max-width` fields.
+It should now look like this.
+
+```css
+body {
+	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	line-height: 1.4em;
+	background: #f5f5f5;
+	color: #4d4d4d;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-weight: 300;
+}
+```
+
+If you run `mix phx.server`, 
+your app should now be working!
+
+![final](https://user-images.githubusercontent.com/17494745/208715527-78c18229-a1f8-4a88-8763-109e1f972104.gif)
+
+
+
+
+
+
 
 
 # _Deploy_!
