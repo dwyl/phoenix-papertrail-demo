@@ -470,7 +470,6 @@ and add the following code.
 ```elixir
 defmodule App.Todo.Change do
   use Ecto.Schema
-  import Ecto.Changeset
 
   schema "versions" do
     field :event,        :string
