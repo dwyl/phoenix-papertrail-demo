@@ -8,8 +8,6 @@ in a simple `Phoenix` Todo List App.
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/dwyl/phoenix-papertrail-demo/ci.yml?label=build&style=flat-square&branch=main)
 [![codecov.io](https://img.shields.io/codecov/c/github/dwyl/phoenix-papertrail-demo/master.svg?style=flat-square)](http://codecov.io/github/dwyl/phoenix-papertrail-demo?branch=master)
 [![HitCount](https://hits.dwyl.com/dwyl/phoenix-papertrail-demo.svg?style=flat-square&show=unique)](http://hits.dwyl.com/dwyl/phoenix-papertrail-demo)
-
-
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/dwyl/phoenix-papertrail-demo/issues)
 
 
