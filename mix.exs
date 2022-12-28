@@ -61,7 +61,7 @@ defmodule App.MixProject do
       {:plug_cowboy, "~> 2.5"},
 
       # PaperTrail
-      {:paper_trail, "~> 0.14.3"},
+      {:paper_trail, "~> 1.0.0"},
 
       # Track test coverage
       {:excoveralls, "~> 0.15", only: [:test, :dev]}
