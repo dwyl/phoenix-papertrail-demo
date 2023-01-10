@@ -11,7 +11,7 @@ in a simple `Phoenix` Todo List App.
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat-square)](https://github.com/dwyl/phoenix-papertrail-demo/issues)
 
 
-![final](https://user-images.githubuserc ontent.com/17494745/208715527-78c18229-a1f8-4a88-8763-109e1f972104.gif)
+![final](https://user-images.githubusercontent.com/17494745/208715527-78c18229-a1f8-4a88-8763-109e1f972104.gif)
 
 
 </div>
